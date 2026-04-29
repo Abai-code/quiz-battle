@@ -145,8 +145,8 @@ function updateAuthState() {
             navProfile.href = 'profile.html';
         }
 
-        // Егер "Шығу" батырмасы жоқ болса, қосу
-        if (!document.getElementById('logout-btn')) {
+        // Ensure nav exists before adding logout button
+        if (nav && !document.getElementById('logout-btn')) {
             const logoutBtn = document.createElement('button');
             logoutBtn.id = 'logout-btn';
             logoutBtn.innerText = 'Шығу';
@@ -154,8 +154,15 @@ function updateAuthState() {
             logoutBtn.style.marginLeft = '10px';
             
             logoutBtn.onclick = () => {
-                localStorage.removeItem('isLoggedIn');
-                window.location.href = 'index.html'; // Шыққан соң басты бетке лақтыру
+                try {
+                    // Clear authentication flags and user data
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('user');
+                } catch (e) {
+                    console.error('Logout cleanup error:', e);
+                }
+                // Redirect to home page after logout
+                window.location.href = 'index.html';
             };
             
             nav.appendChild(logoutBtn);

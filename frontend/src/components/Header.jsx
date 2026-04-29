@@ -48,8 +48,9 @@ function Header({ toggleTheme }) {
 
   const handleLogout = () => {
     localStorage.removeItem('user');
-    navigate('/login');
-    window.location.reload();
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('token');
+    window.location.href = '/';
   };
 
   return (

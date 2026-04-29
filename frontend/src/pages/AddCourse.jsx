@@ -55,8 +55,9 @@ function AddCourse() {
     });
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Бұл курсты өшіруге сенімдісіз бе? Барлық сабақтар да жойылады.')) {
+  const handleDelete = async (id) => {
+    const confirmed = await window.confirm('Бұл курсты өшіруге сенімдісіз бе? Барлық сабақтар да жойылады.');
+    if (confirmed) {
       fetch(`http://localhost:5000/api/courses/${id}`, { method: 'DELETE' })
         .then(res => {
           if (!res.ok) throw new Error('Өшіру мүмкін болмады');

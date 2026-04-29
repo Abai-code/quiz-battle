@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import API_BASE from '../api';
 
 function Login() {
@@ -80,7 +80,7 @@ function Login() {
           </div>
           <button className="btn" style={{ width: '100%', marginTop: '10px' }}>Кіру</button>
           <p style={{ marginTop: '25px', textAlign: 'center', opacity: 0.8 }}>
-            Аккаунтыңыз жоқ па? <a href="/register" style={{ color: 'var(--primary-color)', fontWeight: 'bold', textDecoration: 'none' }}>Тіркелу</a>
+            Аккаунтыңыз жоқ па? <Link to="/register" style={{ color: 'var(--primary-color)', fontWeight: 'bold', textDecoration: 'none' }}>Тіркелу</Link>
           </p>
         </form>
       </div>

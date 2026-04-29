@@ -67,8 +67,9 @@ function Admin() {
       });
   };
 
-  const deleteItem = (id, type) => {
-    if (window.confirm('Бұл мәліметті өшіргіңіз келеді ме?')) {
+  const deleteItem = async (id, type) => {
+    const confirmed = await window.confirm('Бұл мәліметті өшіргіңіз келеді ме?');
+    if (confirmed) {
       fetch(`${API_BASE}/${type}/${id}`, { 
         method: 'DELETE',
         headers: fetchHeaders

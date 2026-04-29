@@ -91,8 +91,9 @@ function AddQuestion() {
     });
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Бұл сұрақты өшіруге сенімдісіз бе?')) {
+  const handleDelete = async (id) => {
+    const confirmed = await window.confirm('Бұл сұрақты өшіруге сенімдісіз бе?');
+    if (confirmed) {
       fetch(`http://localhost:5000/api/questions/${id}`, { 
         method: 'DELETE',
         headers: fetchHeaders

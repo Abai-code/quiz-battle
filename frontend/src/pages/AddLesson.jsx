@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function AddLesson() {
+  const navigate = useNavigate();
   const [lesson, setLesson] = useState({ title: '', videoUrl: '', courseId: '' });
   const [courses, setCourses] = useState([]);
   const [lessons, setLessons] = useState([]);
@@ -67,8 +69,9 @@ function AddLesson() {
     });
   };
 
-  const handleDelete = (id) => {
-    if (window.confirm('Бұл сабақты өшіруға сенімдісіз бе?')) {
+  const handleDelete = async (id) => {
+    const confirmed = await window.confirm('Бұл сабақты өшіруға сенімдісіз бе?');
+    if (confirmed) {
       fetch(`http://localhost:5000/api/lessons/${id}`, { method: 'DELETE' })
         .then(async res => {
           if (!res.ok) {
@@ -102,7 +105,7 @@ function AddLesson() {
         {courses.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '20px' }}>
             <p style={{ marginBottom: '20px' }}>⚠️ Әзірге ешқандай курс жоқ. Алдымен курс қосыңыз.</p>
-            <button className="btn" onClick={() => window.location.href='/add-course'}>Курс қосуға өту</button>
+            <button className="btn" onClick={() => navigate('/add-course')}>Курс қосуға өту</button>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
