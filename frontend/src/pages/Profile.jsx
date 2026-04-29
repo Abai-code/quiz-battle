@@ -68,7 +68,6 @@ function Profile() {
       
       // Серверге жіберу
       fetch(`${API_BASE}/user/avatar`, {
-
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',
@@ -76,12 +75,20 @@ function Profile() {
         },
         body: JSON.stringify({ avatar_url: base64String })
       })
-      .then(() => {
+      .then(async res => {
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || 'Суретті жүктеу мүмкін болмады');
+        }
         const updatedUser = { ...user, avatar_url: base64String };
         setUser(updatedUser);
         localStorage.setItem('user', JSON.stringify(updatedUser));
+        alert('Аватар сәтті жаңартылды!');
       })
-      .catch(err => console.error(err));
+      .catch(err => {
+        console.error(err);
+        alert(`Қате: ${err.message}`);
+      });
     };
     reader.readAsDataURL(file);
   };
