@@ -1,2 +1,2 @@
-const API_BASE = 'http://localhost:5001/api';
+const API_BASE = 'https://quiz-battle-0ash.onrender.com/api';
 export default API_BASE;
