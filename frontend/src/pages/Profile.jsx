@@ -28,6 +28,7 @@ function Profile() {
           setUser(found);
           setNewName(found.name);
           localStorage.setItem('user', JSON.stringify(found));
+          window.dispatchEvent(new Event('userUpdated'));
         }
       })
       .catch(err => console.error(err));
@@ -36,7 +37,6 @@ function Profile() {
   const handleUpdate = (e) => {
     e.preventDefault();
     fetch(`${API_BASE}/update-profile`, {
-
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: user.id, name: newName })
@@ -47,6 +47,7 @@ function Profile() {
       setUser(updatedUser);
       setIsEditing(false);
       localStorage.setItem('user', JSON.stringify(updatedUser));
+      window.dispatchEvent(new Event('userUpdated'));
       alert('Профиль жаңартылды!');
     })
     .catch(err => console.error(err));
@@ -83,6 +84,7 @@ function Profile() {
         const updatedUser = { ...user, avatar_url: base64String };
         setUser(updatedUser);
         localStorage.setItem('user', JSON.stringify(updatedUser));
+        window.dispatchEvent(new Event('userUpdated'));
         alert('Аватар сәтті жаңартылды!');
       })
       .catch(err => {

@@ -5,12 +5,24 @@ import API_BASE from '../api';
 
 
 function Header({ toggleTheme }) {
-  const [user] = useState(() => JSON.parse(localStorage.getItem('user')));
+  const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('user')));
   const [unreadCounts, setUnreadCounts] = useState({ total: 0, details: [] });
   const [challengeCount, setChallengeCount] = useState(0);
   const navigate = useNavigate();
 
   const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    const handleUserUpdate = () => {
+      setUser(JSON.parse(localStorage.getItem('user')));
+    };
+    window.addEventListener('userUpdated', handleUserUpdate);
+    window.addEventListener('storage', handleUserUpdate);
+    return () => {
+      window.removeEventListener('userUpdated', handleUserUpdate);
+      window.removeEventListener('storage', handleUserUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     if (!user?.id) return;
