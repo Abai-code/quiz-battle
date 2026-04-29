@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE from '../api';
+
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -17,7 +19,8 @@ function Profile() {
     setUser(localUser);
     setNewName(localUser.name || '');
 
-    fetch('http://localhost:5001/api/users')
+    fetch(`${API_BASE}/users`)
+
       .then(res => res.json())
       .then(data => {
         const found = data.find(u => u.email === localUser.email);
@@ -32,7 +35,8 @@ function Profile() {
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    fetch('http://localhost:5001/api/update-profile', {
+    fetch(`${API_BASE}/update-profile`, {
+
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: user.id, name: newName })
@@ -63,7 +67,8 @@ function Profile() {
       const base64String = reader.result;
       
       // Серверге жіберу
-      fetch('http://localhost:5001/api/user/avatar', {
+      fetch(`${API_BASE}/user/avatar`, {
+
         method: 'PATCH',
         headers: { 
           'Content-Type': 'application/json',

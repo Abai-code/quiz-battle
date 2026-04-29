@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE from '../api';
 
 function Login() {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -24,7 +25,8 @@ function Login() {
     setMessage('Тексерілуде...');
 
     try {
-      const response = await fetch('http://localhost:5001/api/login', {
+      const response = await fetch(`${API_BASE}/login`, {
+
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

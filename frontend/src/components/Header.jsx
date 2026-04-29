@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 
-const API_BASE = 'http://localhost:5001/api';
+import API_BASE from '../api';
+
 
 function Header({ toggleTheme }) {
   const [user] = useState(() => JSON.parse(localStorage.getItem('user')));

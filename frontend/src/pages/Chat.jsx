@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE = 'http://localhost:5001/api';
+import API_BASE from '../api';
+
 
 function Chat() {
   const [user] = useState(() => JSON.parse(localStorage.getItem('user')));

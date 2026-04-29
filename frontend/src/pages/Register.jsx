@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import API_BASE from '../api';
+
 
 function Register() {
   const [formData, setFormData] = useState({ name: '', email: '', password: '', role: 'student' });
@@ -51,7 +53,8 @@ function Register() {
 
     setIsSubmitting(true);
     try {
-      const res = await fetch('http://localhost:5001/api/register', {
+      const res = await fetch(`${API_BASE}/register`, {
+
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

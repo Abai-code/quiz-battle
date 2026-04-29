@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE from '../api';
+
 import { useNavigate } from 'react-router-dom';
 
 function Notifications() {
@@ -15,7 +17,8 @@ function Notifications() {
   }, [user]);
 
   const fetchNotifications = () => {
-    fetch('http://localhost:5001/api/notifications', {
+    fetch(`${API_BASE}/notifications`, {
+
       headers: { 'x-user-id': user.id }
     })
     .then(res => res.json())
@@ -24,7 +27,8 @@ function Notifications() {
   };
 
   const markAsRead = (id) => {
-    fetch(`http://localhost:5001/api/notifications/${id}/read`, {
+    fetch(`${API_BASE}/notifications/${id}/read`, {
+
       method: 'PATCH',
       headers: { 'x-user-id': user.id }
     })

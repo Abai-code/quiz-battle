@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE from '../api';
+
 import { useNavigate } from 'react-router-dom';
 
 function Admin() {
@@ -39,13 +41,14 @@ function Admin() {
   const fetchData = () => {
     setLoading(true);
     const endpoints = {
-      users: 'http://localhost:5001/api/users',
-      questions: 'http://localhost:5001/api/questions',
-      messages: 'http://localhost:5001/api/contact',
-      courses: 'http://localhost:5001/api/courses',
-      stats: 'http://localhost:5001/api/admin/stats',
-      logs: 'http://localhost:5001/api/admin/logs'
+      users: `${API_BASE}/users`,
+      questions: `${API_BASE}/questions`,
+      messages: `${API_BASE}/contact`,
+      courses: `${API_BASE}/courses`,
+      stats: `${API_BASE}/admin/stats`,
+      logs: `${API_BASE}/admin/logs`
     };
+
 
     fetch(endpoints[view], { headers: fetchHeaders })
       .then(res => res.json())
@@ -65,8 +68,8 @@ function Admin() {
   };
 
   const deleteItem = (id, type) => {
-    if (window.confirm(`Бұл жазбаны өшіруге сенімдісіз бе?`)) {
-      fetch(`http://localhost:5001/api/${type}/${id}`, { 
+    if (window.confirm('Бұл мәліметті өшіргіңіз келеді ме?')) {
+      fetch(`${API_BASE}/${type}/${id}`, { 
         method: 'DELETE',
         headers: fetchHeaders
       })
@@ -84,7 +87,7 @@ function Admin() {
     const type = view;
     const id = editItem.id;
     
-    fetch(`http://localhost:5001/api/${type}/${id}`, {
+    fetch(`${API_BASE}/${type}/${id}`, {
       method: 'PUT',
       headers: fetchHeaders,
       body: JSON.stringify(editItem)
@@ -96,7 +99,7 @@ function Admin() {
   };
 
   const changeRole = (userId, newRole) => {
-    fetch(`http://localhost:5001/api/users/${userId}/role`, {
+    fetch(`${API_BASE}/users/${userId}/role`, {
       method: 'PATCH',
       headers: fetchHeaders,
       body: JSON.stringify({ role: newRole })
@@ -106,7 +109,7 @@ function Admin() {
 
   const handleAddUser = (e) => {
     e.preventDefault();
-    fetch('http://localhost:5001/api/users', {
+    fetch(`${API_BASE}/users`, {
       method: 'POST',
       headers: fetchHeaders,
       body: JSON.stringify(newUser)

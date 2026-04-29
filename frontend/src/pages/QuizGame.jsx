@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE from '../api';
+
 
 function QuizGame() {
   const [questions, setQuestions] = useState([]);
@@ -22,7 +24,8 @@ function QuizGame() {
   };
 
   useEffect(() => {
-    fetch('http://localhost:5001/api/questions')
+    fetch(`${API_BASE}/questions`)
+
       .then(res => res.json())
       .then(data => { 
         // Сұрақтарды араластыру және әр сұрақтың нұсқаларын араластыру
@@ -68,7 +71,8 @@ function QuizGame() {
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) return null;
 
-    fetch('http://localhost:5001/api/update-score', {
+    fetch(`${API_BASE}/update-score`, {
+
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: user.email, score: finalScore })
@@ -78,7 +82,8 @@ function QuizGame() {
     const activeBattleId = localStorage.getItem('activeBattleId');
 
     if (pendingBattleId) {
-      await fetch(`http://localhost:5001/api/battles/${pendingBattleId}/challenger`, {
+      await fetch(`${API_BASE}/battles/${pendingBattleId}/challenger`, {
+
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ score: finalScore })
@@ -88,7 +93,8 @@ function QuizGame() {
     } else if (activeBattleId) {
       const oppScore = parseInt(localStorage.getItem('challengerScore'));
       const oppName = localStorage.getItem('challengerName');
-      await fetch(`http://localhost:5001/api/battles/${activeBattleId}/complete`, {
+      await fetch(`${API_BASE}/battles/${activeBattleId}/complete`, {
+
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ score: finalScore })

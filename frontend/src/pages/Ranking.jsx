@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE from '../api';
+
 
 function Ranking() {
   const [leaders, setLeaders] = useState([]);
@@ -30,20 +32,23 @@ function Ranking() {
 
   const fetchRanking = () => {
     setLoading(true);
-    fetch(`http://localhost:5001/api/ranking?limit=${limit}&offset=${page * limit}`)
+    fetch(`${API_BASE}/ranking?limit=${limit}&offset=${page * limit}`)
+
       .then(res => res.json())
       .then(data => { setLeaders(data); setLoading(false); })
       .catch(() => setLoading(false));
   };
 
   const fetchBattles = () => {
-    fetch(`http://localhost:5001/api/battles/${user.id}`)
+    fetch(`${API_BASE}/battles/${user.id}`)
+
       .then(res => res.json())
       .then(data => setBattles(data));
   };
 
   const fetchCompletedBattles = () => {
-    fetch(`http://localhost:5001/api/battles/completed/${user.id}`)
+    fetch(`${API_BASE}/battles/completed/${user.id}`)
+
       .then(res => res.json())
       .then(data => setCompletedBattles(data))
       .catch(() => {});
@@ -57,7 +62,8 @@ function Ranking() {
 
   const confirmChallenge = async () => {
     try {
-      const res = await fetch('http://localhost:5001/api/battles', {
+      const res = await fetch(`${API_BASE}/battles`, {
+
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ challengerId: user.id, opponentId: modal.opponent.id })

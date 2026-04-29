@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import API_BASE from '../api';
 
 function Courses() {
   const [courses, setCourses] = useState([]);
@@ -40,7 +42,8 @@ function Courses() {
   }, [activeVideo]);
 
   const fetchCourses = () => {
-    fetch('http://localhost:5001/api/courses')
+    fetch(`${API_BASE}/courses`)
+
       .then(res => res.json())
       .then(data => {
         setCourses(data);
@@ -51,14 +54,16 @@ function Courses() {
   };
 
   const fetchProgress = () => {
-    fetch(`http://localhost:5001/api/user-progress/${user.id}`)
+    fetch(`${API_BASE}/user-progress/${user.id}`)
+
       .then(res => res.json())
       .then(data => setProgress(data))
       .catch(err => console.error(err));
   };
 
   const fetchComments = (lessonId) => {
-    fetch(`http://localhost:5001/api/lessons/${lessonId}/comments`)
+    fetch(`${API_BASE}/lessons/${lessonId}/comments`)
+
       .then(res => res.json())
       .then(data => setComments(data))
       .catch(err => console.error(err));
@@ -68,7 +73,8 @@ function Courses() {
     setSelectedCourse(course);
     setLessons([]);
     setActiveVideo(null);
-    fetch(`http://localhost:5001/api/lessons/${course.id}`)
+    fetch(`${API_BASE}/lessons/${course.id}`)
+
       .then(res => res.json())
       .then(data => setLessons(data))
       .catch(err => console.error(err));
@@ -76,7 +82,8 @@ function Courses() {
 
   const toggleProgress = (lessonId) => {
     if (!user.id) return alert('Прогресті сақтау үшін жүйеге кіріңіз');
-    fetch('http://localhost:5001/api/toggle-progress', {
+    fetch(`${API_BASE}/toggle-progress`, {
+
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: user.id, lessonId })
@@ -93,7 +100,8 @@ function Courses() {
     if (!user.id) return alert('Пікір қалдыру үшін жүйеге кіріңіз');
     if (!newComment.trim()) return;
 
-    fetch('http://localhost:5001/api/comments', {
+    fetch(`${API_BASE}/comments`, {
+
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: user.id, lessonId: activeVideo.id, text: newComment })

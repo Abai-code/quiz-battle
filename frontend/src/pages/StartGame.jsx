@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE from '../api';
+
 
 function StartGame() {
   const [opponent, setOpponent] = useState('random');
@@ -19,12 +21,14 @@ function StartGame() {
       // Кездейсоқ қарсылас іздеу
       try {
         const userId = user.id || user._id; // Кез келген ID түрін тексеру
-        const res = await fetch(`http://localhost:5001/api/battles/random-opponent/${userId}`);
+        const res = await fetch(`${API_BASE}/battles/random-opponent/${userId}`);
+
         
         if (res.ok) {
           const opp = await res.json();
           // Батл құру
-          const battleRes = await fetch('http://localhost:5001/api/battles', {
+          const battleRes = await fetch(`${API_BASE}/battles`, {
+
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ challengerId: userId, opponentId: opp.id })
