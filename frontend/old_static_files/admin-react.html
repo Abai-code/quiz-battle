@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Battle | Админ </title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js" defer></script>
+  <script src="js/auth.js" defer></script>
+
+  <!-- React & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Babel -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    .crud-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .crud-form {
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      margin-bottom: 30px;
+    }
+
+    .question-card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      margin-bottom: 15px;
+      border-left: 4px solid var(--primary-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 15px;
+      border-radius: 12px;
+      border: 1px solid rgba(150, 150, 150, 0.3);
+      margin-bottom: 20px;
+      background: var(--bg-color);
+      color: var(--text-color);
+      font-size: 1rem;
+    }
+
+    .btn-danger {
+      background: #ef4444;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-edit {
+      background: #3b82f6;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Quiz Battle</h1>
+    <nav>
+      <a href="index.html">Басты бет</a>
+      <a href="about.html">Біз туралы</a>
+      <a href="services.html">Қызметтер</a>
+      <a href="quiz.html">Ойын</a>
+      <a href="quiz-react.html">Ойын</a>
+      <a href="admin-react.html" class="active">Админ</a>
+      <a href="ranking.html">Рейтинг</a>
+      <a href="profile.html" id="nav-profile">Профиль</a>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <h2 class="page-title">Сұрақтарды басқару</h2>
+    <div id="react-root"></div>
+  </main>
+
+  <footer>
+    <p>Quiz Battle. 2026 Абай</p>
+  </footer>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function AdminApp() {
+      const initialQuestions = [
+        { id: 1, question: "Қазақстанның астанасы қай қала?", options: "Астана,Алматы,Шымкент,Ақтөбе", answer: "Астана" },
+        { id: 2, question: "Ең үлкен планета қандай?", options: "Жер,Марс,Юпитер,Сатурн", answer: "Юпитер" },
+        { id: 3, question: "Абай Құнанбайұлы қай жылы туған?", options: "1845,1835,1855,1904", answer: "1845" },
+        { id: 4, question: "Дүние жүзіндегі ең үлкен мұхит?", options: "Атлант,Үнді,Тынық,Солтүстік Мұзды", answer: "Тынық" },
+        { id: 5, question: "Судың химиялық формуласы қандай?", options: "CO2,O2,H2O,H2O2", answer: "H2O" }
+      ];
+
+      const [questions, setQuestions] = useState(() => {
+        const saved = localStorage.getItem('quiz_questions');
+        return saved ? JSON.parse(saved) : initialQuestions;
+      });
+
+      React.useEffect(() => {
+        localStorage.setItem('quiz_questions', JSON.stringify(questions));
+      }, [questions]);
+
+      const [searchQuery, setSearchQuery] = useState("");
+
+      const [formData, setFormData] = useState({ question: "", options: "", answer: "" });
+      const [isEditing, setIsEditing] = useState(null);
+
+      const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+      };
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!formData.question || !formData.options || !formData.answer) {
+          alert("Барлық өрістерді толтырыңыз!");
+          return;
+        }
+
+        if (isEditing) {
+          setQuestions(questions.map(q => q.id === isEditing ? { ...formData, id: isEditing } : q));
+          setIsEditing(null);
+        } else {
+          const newQuestion = { ...formData, id: Date.now() };
+          setQuestions([...questions, newQuestion]);
+        }
+        setFormData({ question: "", options: "", answer: "" });
+      };
+
+      const handleDelete = (id) => {
+        setQuestions(questions.filter(q => q.id !== id));
+      };
+      const handleEdit = (q) => {
+        setFormData({ question: q.question, options: q.options, answer: q.answer });
+        setIsEditing(q.id);
+        window.scrollTo(0, 0);
+      };
+
+      const filteredQuestions = questions.filter(q =>
+        q.question.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+      return (
+        <div className="crud-container">
+
+          <form className="crud-form" onSubmit={handleSubmit}>
+            <h3>{isEditing ? "Сұрақты өзгерту" : "Жаңа сұрақ қосу"}</h3>
+            <div className="form-group">
+              <label>Сұрақ:</label>
+              <input type="text" name="question" value={formData.question} onChange={handleChange} placeholder="Сұрақты жазыңыз" />
+            </div>
+            <div className="form-group">
+              <label>Нұсқалар (үтір арқылы бөліңіз):</label>
+              <input type="text" name="options" value={formData.options} onChange={handleChange} placeholder="A,B,C,D" />
+            </div>
+            <div className="form-group">
+              <label>Дұрыс жауап:</label>
+              <input type="text" name="answer" value={formData.answer} onChange={handleChange} placeholder="Дұрыс жауапты көрсетіңіз" />
+            </div>
+            <button type="submit" className="btn" style={{ width: "100%" }}>
+              {isEditing ? "Сақтау" : "Қосу"}
+            </button>
+            {isEditing && (
+              <button type="button" className="btn-danger" style={{ width: "100%", marginTop: "10px" }} onClick={() => { setIsEditing(null); setFormData({ question: "", options: "", answer: "" }) }}>Бас тарту</button>
+            )}
+          </form>
+
+          {/* Іздеу */}
+          <input
+            type="text"
+            className="search-bar"
+            placeholder="Сұрақты іздеу..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+
+          {/* Тізім */}
+          <div>
+            <h3>Барлық сұрақтар ({filteredQuestions.length})</h3>
+            {filteredQuestions.length === 0 ? <p>Сұрақтар табылған жоқ.</p> : null}
+            {filteredQuestions.map(q => (
+              <div key={q.id} className="question-card">
+                <div>
+                  <h4 style={{ marginBottom: "5px" }}>{q.question}</h4>
+                  <p style={{ fontSize: "0.9rem", opacity: 0.8 }}>Нұсқалар: {q.options}</p>
+                  <p style={{ fontSize: "0.9rem", color: "var(--primary-color)", fontWeight: "bold" }}>Жауап: {q.answer}</p>
+                </div>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <button className="btn-edit" onClick={() => handleEdit(q)}>Өзгерту</button>
+                  <button className="btn-danger" onClick={() => handleDelete(q.id)}>Өшіру</button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('react-root'));
+    root.render(<AdminApp />);
+  </script>
+</body>
+
+</html>

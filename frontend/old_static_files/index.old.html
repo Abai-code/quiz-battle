@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Battle | Басты бет</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <header id="main-header">
+    <h1>Quiz Battle</h1>
+    <nav>
+      <a href="index.html" class="active">Басты бет</a>
+      <a href="about.html">Біз туралы</a>
+      <a href="services.html">Қызметтер</a>
+      <a href="quiz.html">Quiz/Сұрақтар</a>
+      <a href="quiz-react.html">Ойын</a>
+      <a href="admin-react.html">Админ</a>
+      <a href="ranking.html">Рейтинг</a>
+      <a href="blog.html">Блог</a>
+      <a href="contact.html">Байланыс</a>
+      <a href="profile.html" id="nav-profile">Профиль</a>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2>Ең мықтыны анықтайтын кез келді!</h2>
+      <div id="tournament-countdown" style="font-size: 1.5rem; font-weight: 800; color: var(--primary-color); margin-bottom: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+         Келесі турнир басталуына: <span id="countdown-timer">10:00</span>
+      </div>
+      <p>Оқушылар мен студенттерге арналған онлайн викторина. Біліміңді тексеріп, рейтингте бірінші орынға шық!</p>
+      <a href="quiz.html" class="btn">Ойынды бастау</a>
+    </section>
+  </main>
+
+  <footer>
+    <p>Quiz Battle. 2026 Абай</p>
+  </footer>
+</body>
+</html>

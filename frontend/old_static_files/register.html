@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Battle | Тіркелу</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>Quiz Battle</h1>
+    <nav>
+      <a href="index.html">Басты бет</a>
+      <a href="about.html">Біз туралы</a>
+      <a href="services.html">Қызметтер</a>
+      <a href="quiz.html">Quiz/Сұрақтар</a>
+      <a href="quiz-react.html">Ойын</a>
+      <a href="admin-react.html">Админ</a>
+      <a href="ranking.html">Рейтинг</a>
+      <a href="blog.html">Блог</a>
+      <a href="contact.html">Байланыс</a>
+      <a href="profile.html">Профиль</a>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <h2 class="page-title">Тіркелу</h2>
+
+    <div class="form-container">
+      <form id="register-form" class="form-group">
+        <div id="register-message" style="margin-bottom: 20px; font-weight: 600; text-align: center;"></div>
+        
+        <div class="form-group">
+          <label for="reg-name">Атыңыз</label>
+          <input type="text" id="reg-name" placeholder="Атыңызды енгізіңіз" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="reg-email">Электрондық пошта</label>
+          <input type="email" id="reg-email" placeholder="Мысалы: abay@mail.kz" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="reg-password">Құпиясөз</label>
+          <input type="password" id="reg-password" placeholder="Кемінде 6 символ" required>
+        </div>
+        
+        <button type="submit" class="btn" style="width: 100%;">Тіркелу</button>
+      </form>
+      
+      <p style="text-align: center; margin-top: 20px; font-size: 0.9rem; opacity: 0.8;">
+        Аккаунтыңыз бар ма? <a href="login.html" style="color: var(--primary-color); font-weight: 600;">Кіру</a>
+      </p>
+    </div>
+  </main>
+
+  <footer>
+    <p>Quiz Battle. 2026 Абай</p>
+  </footer>
+</body>
+</html>

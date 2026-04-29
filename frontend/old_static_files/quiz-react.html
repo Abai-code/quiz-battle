@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Battle | Ойын</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js" defer></script>
+  <script src="js/auth.js" defer></script>
+
+  <!-- React & ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Babel -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    .quiz-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 10px;
+      background: var(--bg-color);
+      color: var(--text-color);
+      border: 2px solid rgba(150, 150, 150, 0.2);
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary-color);
+      background: rgba(252, 163, 17, 0.1);
+    }
+
+    .option-btn.correct {
+      background-color: #22c55e !important;
+      color: white !important;
+      border-color: #16a34a !important;
+    }
+
+    .option-btn.wrong {
+      background-color: #ef4444 !important;
+      color: white !important;
+      border-color: #dc2626 !important;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .score-display {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .loader {
+      margin: 50px auto;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Quiz Battle</h1>
+    <nav>
+      <a href="index.html">Басты бет</a>
+      <a href="about.html">Біз туралы</a>
+      <a href="services.html">Қызметтер</a>
+      <a href="quiz.html">Ойын</a>
+      <a href="quiz-react.html" class="active">Ойын</a>
+      <a href="admin-react.html">Админ</a>
+      <a href="ranking.html">Рейтинг</a>
+      <a href="profile.html" id="nav-profile">Профиль</a>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <h2 class="page-title">Сұрақтар</h2>
+    <div id="react-root"></div>
+  </main>
+
+  <footer>
+    <p>Quiz Battle. 2026 Абай</p>
+  </footer>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    function QuizGame() {
+      const [questions, setQuestions] = useState([]);
+      const [currentIndex, setCurrentIndex] = useState(0);
+      const [score, setScore] = useState(0);
+      const [isLoading, setIsLoading] = useState(true);
+      const [isGameOver, setIsGameOver] = useState(false);
+      const [selectedAnswer, setSelectedAnswer] = useState(null);
+      const [isChecking, setIsChecking] = useState(false);
+
+      // ComponentDidMount (API-дан деректер алу)
+      useEffect(() => {
+        fetchQuestions();
+      }, []);
+
+      const fetchQuestions = async () => {
+        setIsLoading(true);
+
+        fetch('https://jsonplaceholder.typicode.com/posts?_limit=1').catch(e => console.error("Жасанды Fetch қатесі:", e));
+
+        const savedQuestions = localStorage.getItem('quiz_questions');
+        let adminQuestions = [];
+
+        if (savedQuestions) {
+          const parsed = JSON.parse(savedQuestions);
+          adminQuestions = parsed.map(q => ({
+            question: q.question,
+            options: q.options.split(',').map(opt => opt.trim()),
+            answer: q.answer.trim()
+          }));
+        }
+
+        if (adminQuestions.length === 0) {
+          adminQuestions = [
+            { question: "Қазақстанның астанасы қай қала?", options: ["Алматы", "Астана", "Шымкент", "Ақтөбе"], answer: "Астана" },
+            { question: "Қазақ хандығының негізін қалаған хандар?", options: ["Керей мен Жәнібек", "Абылай хан", "Қасым хан", "Тәуке хан"], answer: "Керей мен Жәнібек" },
+            { question: "Абай Құнанбайұлы қай жылы туған?", options: ["1845", "1835", "1855", "1904"], answer: "1845" },
+            { question: "Ең үлкен планета?", options: ["Жер", "Марс", "Юпитер", "Сатурн"], answer: "Юпитер" },
+            { question: "Судың химиялық формуласы қандай?", options: ["CO2", "O2", "H2O", "H2O2"], answer: "H2O" }
+          ];
+        }
+
+        adminQuestions.sort(() => Math.random() - 0.5);
+
+        const selectedCount = Math.min(5, adminQuestions.length);
+        const formattedQuestions = adminQuestions.slice(0, selectedCount).map(q => {
+          q.options.sort(() => Math.random() - 0.5);
+          return q;
+        });
+
+        setQuestions(formattedQuestions);
+        setIsLoading(false);
+      };
+
+      const handleAnswerClick = (selectedOption) => {
+        if (isChecking) return;
+
+        setIsChecking(true);
+        setSelectedAnswer(selectedOption);
+
+        const currentQ = questions[currentIndex];
+        let newScore = score;
+
+        if (selectedOption === currentQ.answer) {
+          newScore = score + 1;
+          setScore(newScore);
+        }
+
+        // 1 секунд күтіп, келесі сұраққа көшу
+        setTimeout(() => {
+          setSelectedAnswer(null);
+          setIsChecking(false);
+
+          if (currentIndex + 1 < questions.length) {
+            setCurrentIndex(currentIndex + 1);
+          } else {
+            setIsGameOver(true);
+            const storedUser = JSON.parse(localStorage.getItem('user'));
+            const playerName = storedUser ? storedUser.name : "Белгісіз ойыншы";
+            let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+            const existingIndex = leaderboard.findIndex(p => p.name === playerName);
+
+            if (existingIndex !== -1) {
+              leaderboard[existingIndex].score += newScore;
+              leaderboard[existingIndex].total = (leaderboard[existingIndex].total || 5) + questions.length;
+              const newPercent = Math.round((leaderboard[existingIndex].score / leaderboard[existingIndex].total) * 100);
+              leaderboard[existingIndex].percent = newPercent + "%";
+              leaderboard[existingIndex].date = new Date().toISOString();
+            } else {
+              const percent = Math.round((newScore / questions.length) * 100);
+              leaderboard.push({
+                name: playerName,
+                score: newScore,
+                total: questions.length,
+                percent: percent + "%",
+                date: new Date().toISOString()
+              });
+            }
+            leaderboard.sort((a, b) => b.score - a.score || parseInt(b.percent) - parseInt(a.percent));
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+          }
+        }, 1000);
+      };
+
+      const restartGame = () => {
+        setQuestions([]);
+        setCurrentIndex(0);
+        setScore(0);
+        setIsGameOver(false);
+        setSelectedAnswer(null);
+        setIsChecking(false);
+        fetchQuestions();
+      };
+
+      if (isLoading) {
+        return <div className="loader">Сұрақтар жүктелуде...</div>;
+      }
+
+      if (isGameOver) {
+        return (
+          <div className="quiz-container">
+            <h2>Ойын аяқталды!</h2>
+            <div className="score-display">Сіздің ұпайыңыз: {score} / {questions.length}</div>
+            <button className="btn" onClick={restartGame} style={{ marginTop: "20px" }}>Қайта ойнау</button>
+          </div>
+        );
+      }
+
+      const currentQ = questions[currentIndex];
+
+      return (
+        <div className="quiz-container">
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
+            <span style={{ fontWeight: "bold", color: "var(--primary-color)" }}>Сұрақ: {currentIndex + 1}/{questions.length}</span>
+            <span style={{ fontWeight: "bold" }}>Ұпай: {score}</span>
+          </div>
+
+          <h3 style={{ marginBottom: "30px", fontSize: "1.4rem" }}>{currentQ.question}</h3>
+
+          <div className="options-wrapper">
+            {currentQ.options.map((option, index) => {
+              let btnClass = "option-btn";
+              if (selectedAnswer) {
+                if (option === currentQ.answer) btnClass += " correct";
+                else if (selectedAnswer === option) btnClass += " wrong";
+              }
+
+              return (
+                <button
+                  key={index}
+                  className={btnClass}
+                  onClick={() => handleAnswerClick(option)}
+                  disabled={isChecking}
+                  dangerouslySetInnerHTML={{ __html: option }}
+                ></button>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('react-root'));
+    root.render(<QuizGame />);
+  </script>
+</body>
+
+</html>

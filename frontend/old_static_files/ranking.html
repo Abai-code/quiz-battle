@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Battle | Рейтинг</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+
+<body>
+  <header>
+    <h1>Quiz Battle</h1>
+        <nav>
+      <a href="index.html">Басты бет</a>
+      <a href="about.html">Біз туралы</a>
+      <a href="services.html">Қызметтер</a>
+      <a href="quiz.html">Quiz/Сұрақтар</a>
+      <a href="quiz-react.html">Ойын</a>
+      <a href="admin-react.html">Админ</a>
+      <a href="ranking.html" class="active">Рейтинг</a>
+      <a href="blog.html">Блог</a>
+      <a href="contact.html">Байланыс</a>
+      <a href="profile.html" id="nav-profile">Профиль</a>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <h2 class="page-title">Үздік 10 ойыншы</h2>
+
+    <table class="leaderboard">
+      <thead>
+        <tr>
+          <th>Орын</th>
+          <th>Ойыншы аты</th>
+          <th>Жеңістері</th>
+          <th>Пайызы</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <!-- JS арқылы толтырылады -->
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tbody = document.getElementById('leaderboard-body');
+      
+      // Бастапқы (фейк) ойыншылар, егер localStorage бос болса (Шынайы ұпайлар: 1-5 аралығында)
+      // LocalStorage-тан оқу
+      let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+      
+      // Фейк ойыншыларды (бұрын қосылып кеткен) базадан толық тазалау
+      leaderboard = leaderboard.filter(p => !["Абай_01", "Zhasulan22", "AlmatyKing", "Akerke_K", "QuizMaster"].includes(p.name));
+      
+      // Бір ойыншының бірнеше рекорды болса, оларды біріктіру (Очколарын қосу)
+      const aggregated = {};
+      leaderboard.forEach(p => {
+        if (!aggregated[p.name]) {
+          aggregated[p.name] = { ...p };
+          if (!aggregated[p.name].total) aggregated[p.name].total = 5; // Ескі мәліметтерге арналған
+        } else {
+          aggregated[p.name].score += p.score;
+          aggregated[p.name].total += (p.total || 5);
+          aggregated[p.name].percent = Math.round((aggregated[p.name].score / aggregated[p.name].total) * 100) + "%";
+        }
+      });
+      
+      // Объектіні қайтадан массивке айналдыру
+      leaderboard = Object.values(aggregated);
+      
+      // Тазаланған тізімді қайта сақтау
+      localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+
+      // Ұпайлар бойынша сұрыптау (көптен азға)
+      leaderboard.sort((a, b) => b.score - a.score || parseInt(b.percent) - parseInt(a.percent));
+
+      // Тек алғашқы 10 адамды (Үздік 10) шығару
+      const top10 = leaderboard.slice(0, 10);
+
+      // Кестені тазарту
+      tbody.innerHTML = '';
+
+      // Егер әлі ешкім ойнамаған болса
+      if (top10.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 30px; font-weight: 600; color: var(--primary-color);">Әлі ешкім ойнамаған. Бірінші болып сіз ойнаңыз!</td></tr>';
+        return;
+      }
+
+      // Мәліметтерді кестеге салу
+      top10.forEach((player, index) => {
+        const tr = document.createElement('tr');
+        
+        // Топ 3-ке арнайы стиль беру үшін
+        if (index === 0) tr.style.background = "rgba(252, 163, 17, 0.2)";
+        if (index === 1) tr.style.background = "rgba(200, 200, 200, 0.1)";
+        if (index === 2) tr.style.background = "rgba(180, 100, 50, 0.1)";
+
+        tr.innerHTML = `
+          <td style="font-weight: bold; color: var(--primary-color);">${index + 1}</td>
+          <td style="font-weight: 600;">${player.name}</td>
+          <td>${player.score}</td>
+          <td><span class="badge" style="background: var(--primary-color); padding: 4px 10px; border-radius: 20px; color: #fff;">${player.percent}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    });
+  </script>
+
+  <footer>
+    <p> Quiz Battle. 2026 Абай </p>
+  </footer>
+</body>
+
+</html>

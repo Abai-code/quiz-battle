@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Battle | Services</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>Quiz Battle</h1>
+        <nav>
+      <a href="index.html">Басты бет</a>
+      <a href="about.html">Біз туралы</a>
+      <a href="services.html" class="active">Қызметтер</a>
+      <a href="quiz.html">Quiz/Сұрақтар</a>
+      <a href="quiz-react.html">Ойын</a>
+      <a href="admin-react.html">Админ</a>
+      <a href="ranking.html">Рейтинг</a>
+      <a href="blog.html">Блог</a>
+      <a href="contact.html">Байланыс</a>
+      <a href="profile.html" id="nav-profile">Профиль</a>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <h2 class="section-title">Қызметтер</h2>
+    <div class="services">
+      <div class="card">
+        <h3>PvP Жарыстар</h3>
+        <p>Достарыңызбен немесе кездейсоқ қарсыластармен 1-ге 1 форматында Quiz ойнаңыз. Кім жылдам әрі дұрыс жауап береді, сол жеңеді!</p>
+      </div>
+      <div class="card">
+        <h3>Рейтинг және Статистика</h3>
+        <p>Сіздің әрбір дұрыс жауабыңыз бағаланады. Дүниежүзілік рейтингте жоғары көтеріліп, жеке статистикаңызды бақылаңыз.</p>
+      </div>
+      <div class="card">
+        <h3>Кастомды сұрақтар қосу</h3>
+        <p>Өз достарыңыз үшін арнайы сұрақтар дайындаңыз немесе мектеп турнирлерін ұйымдастырыңыз. Quiz жасау мүмкіндігі ашық.</p>
+      </div>
+    </div>
+
+    <!-- Show/Hide Task -->
+    <h2 class="section-title" style="margin-top: 60px; font-size: 2.2rem;">Жиі қойылатын сұрақтар</h2>
+    <div class="faq-section">
+      <div class="faq-item card" style="margin-bottom: 15px; cursor: pointer;">
+        <h3 class="faq-question" style="margin: 0; display: flex; justify-content: space-between; font-size: 1.2rem;">Қалай тіркелуге болады? <span class="icon">+</span></h3>
+        <p class="faq-answer" style="display: none; margin-top: 15px; opacity: 0.9;">Тіркелу өте оңай! Жоғарғы оң жақ бұрыштағы немесе Кіру бетіндегі "Тіркелу" сілтемесіне өтіп, атыңыз бен поштаңызды енгізсеңіз болғаны.</p>
+      </div>
+      <div class="faq-item card" style="margin-bottom: 15px; cursor: pointer;">
+        <h3 class="faq-question" style="margin: 0; display: flex; justify-content: space-between; font-size: 1.2rem;">Рейтинг қалай есептеледі? <span class="icon">+</span></h3>
+        <p class="faq-answer" style="display: none; margin-top: 15px; opacity: 0.9;">Рейтинг әрбір жеңіске жеткен матчқа байланысты ұпай қосу арқылы есептеледі. Пайызыңыз қаншалықты жоғары болса, рейтингте соншалықты жоғары боласыз.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Quiz Battle. 2026 Абай</p>
+  </footer>
+</body>
+</html>

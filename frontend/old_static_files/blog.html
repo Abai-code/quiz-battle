@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Battle | Blog</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>Quiz Battle</h1>
+        <nav>
+      <a href="index.html">Басты бет</a>
+      <a href="about.html">Біз туралы</a>
+      <a href="services.html">Қызметтер</a>
+      <a href="quiz.html">Quiz/Сұрақтар</a>
+      <a href="quiz-react.html">Ойын</a>
+      <a href="admin-react.html">Админ</a>
+      <a href="ranking.html">Рейтинг</a>
+      <a href="blog.html" class="active">Блог</a>
+      <a href="contact.html">Байланыс</a>
+      <a href="profile.html" id="nav-profile">Профиль</a>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <h2 class="section-title">Блог және Жаңалықтар</h2>
+    <div class="blog">
+      <!-- BlogPost 1 -->
+      <article class="blog-post">
+        <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="New features">
+        <div class="blog-content">
+          <h3>Жаңа маусым: IT сұрақтары қосылды!</h3>
+          <p>Біздің базаға бағдарламалау, желілер және киберқауіпсіздік бойынша 500-ден астам жаңа сұрақ қосылды. Өз біліміңізді сынап көріңіз.</p>
+          <a href="#" class="btn" style="margin-top: 10px; padding: 8px 15px; font-size: 0.9rem;">Толық оқу</a>
+        </div>
+      </article>
+
+      <!-- BlogPost 2 -->
+      <article class="blog-post">
+        <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tournaments">
+        <div class="blog-content">
+          <h3>Күзгі Турнирге тіркелу басталды</h3>
+          <p>Ең үлкен мектепаралық викторина турниріне дайынсыз ба? Тіркелу 1 қазанға дейін жалғасады. Жеңімпаздарға бағалы сыйлықтар бар!</p>
+          <a href="#" class="btn" style="margin-top: 10px; padding: 8px 15px; font-size: 0.9rem;">Толық оқу</a>
+        </div>
+      </article>
+
+      <!-- BlogPost 3 -->
+      <article class="blog-post">
+        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Tips">
+        <div class="blog-content">
+          <h3>Қалай тез жауап беруге болады?</h3>
+          <p>Quiz ойнаған кезде жылдамдық маңызды. Осы мақалада біз логикалық ойлауды жақсарту және тезірек шешім қабылдау туралы лайфхактарды бөлісеміз.</p>
+          <a href="#" class="btn" style="margin-top: 10px; padding: 8px 15px; font-size: 0.9rem;">Толық оқу</a>
+        </div>
+      </article>
+    </div>
+
+    <!-- DOM Manipulation Task -->
+    <div class="comments-section card" style="margin-top: 40px;">
+      <h3>Пікірлер</h3>
+      <ul id="comments-list" style="list-style: none; padding-left: 0; margin-bottom: 20px;">
+        <li style="padding: 10px; border-bottom: 1px solid rgba(150,150,150,0.1);">Алғашқы пікір! Сайт өте күшті.</li>
+      </ul>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <input type="text" id="comment-input" placeholder="Пікір жазыңыз..." style="flex: 1; min-width: 200px; padding: 10px; border-radius: 8px; border: 1px solid rgba(150,150,150,0.3); background: var(--bg-color); color: var(--text-color);">
+        <button id="add-comment-btn" class="btn" style="padding: 10px 20px;">Қосу</button>
+        <button id="remove-comment-btn" class="btn" style="background: #e63946; padding: 10px 20px;">Соңғысын өшіру</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Quiz Battle. 2026 Абай</p>
+  </footer>
+</body>
+</html>

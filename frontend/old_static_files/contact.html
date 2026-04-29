@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Battle | Contact</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>Quiz Battle</h1>
+        <nav>
+      <a href="index.html">Басты бет</a>
+      <a href="about.html">Біз туралы</a>
+      <a href="services.html">Қызметтер</a>
+      <a href="quiz.html">Quiz/Сұрақтар</a>
+      <a href="quiz-react.html">Ойын</a>
+      <a href="admin-react.html">Админ</a>
+      <a href="ranking.html">Рейтинг</a>
+      <a href="blog.html">Блог</a>
+      <a href="contact.html" class="active">Байланыс</a>
+      <a href="profile.html" id="nav-profile">Профиль</a>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <h2 class="section-title">Байланыс</h2>
+    <div class="contact-container">
+      <form id="contact-form" action="#" method="POST">
+        <div id="contact-message" style="margin-bottom: 20px; font-weight: 600; text-align: center;"></div>
+        <div class="form-group">
+          <label for="name">Атыңыз</label>
+          <input type="text" id="name" name="name" required placeholder="Толық атыңызды енгізіңіз">
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Электронды пошта</label>
+          <input type="email" id="email" name="email" required placeholder="example@gmail.com">
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Тақырып</label>
+          <input type="text" id="subject" name="subject" required placeholder="Қандай сұрақ бойынша?">
+        </div>
+
+        <div class="form-group">
+          <label for="message">Хабарлама</label>
+          <textarea id="message" name="message" rows="5" required placeholder="Хабарламаңызды жазыңыз..."></textarea>
+        </div>
+
+        <button type="submit" class="btn">Жіберу</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>Quiz Battle. 2026 Абай</p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="kk">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Battle | Ойын</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/main.js" defer></script>
+</head>
+
+<body>
+  <header>
+    <h1>Quiz Battle</h1>
+        <nav>
+      <a href="index.html">Басты бет</a>
+      <a href="about.html">Біз туралы</a>
+      <a href="services.html">Қызметтер</a>
+      <a href="quiz.html" class="active">Quiz/Сұрақтар</a>
+      <a href="quiz-react.html">Ойын</a>
+      <a href="admin-react.html">Админ</a>
+      <a href="ranking.html">Рейтинг</a>
+      <a href="blog.html">Блог</a>
+      <a href="contact.html">Байланыс</a>
+      <a href="profile.html" id="nav-profile">Профиль</a>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓 Theme</button>
+    </nav>
+  </header>
+
+  <main class="page-container">
+    <h2 class="page-title">Қарсылас іздеу...</h2>
+
+    <div class="matchmaking-ui card">
+      <h3>Матчмейкинг</h3>
+      <p>Ойыншы күтілуде. Дайын болыңыз!</p>
+
+      <div class="vs-block">
+        <div class="player-box">
+          Сіз (0 ұпай)
+        </div>
+        <div class="vs-circle">VS</div>
+        <div class="player-box">
+          Белгісіз қарсылас
+        </div>
+      </div>
+
+      <button id="stop-matchmaking" class="btn" style="background: #ef4444; box-shadow: 0 10px 20px rgba(239, 68, 68, 0.3);">Тоқтату</button>
+    </div>
+  </main>
+
+  <script>
+    let timer1, timer2;
+
+    // 2 секундтан кейін қарсылас табылғанын көрсетіп, React ойынына бағыттау
+    timer1 = setTimeout(() => {
+      const title = document.querySelector('.page-title');
+      const desc = document.querySelector('.matchmaking-ui p');
+      const vsBox = document.querySelectorAll('.player-box')[1];
+      
+      if (title && desc && vsBox) {
+        title.innerText = "Қарсылас табылды!";
+        desc.innerText = "Ойын басталуда... Дайындалыңыз!";
+        desc.style.color = "var(--primary-color)";
+        desc.style.fontWeight = "bold";
+        vsBox.innerText = "Ойыншы_777";
+        vsBox.style.background = "var(--primary-color)";
+        vsBox.style.color = "var(--bg-color)";
+      }
+      
+      // Тағы 1.5 секундтан соң бағыттау
+      timer2 = setTimeout(() => {
+        window.location.href = 'quiz-react.html';
+      }, 1500);
+      
+    }, 2000);
+
+    // Тоқтату батырмасын басқанда іздеуді доғарып, Басты бетке қайтару
+    document.getElementById('stop-matchmaking').addEventListener('click', () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      
+      const title = document.querySelector('.page-title');
+      const desc = document.querySelector('.matchmaking-ui p');
+      
+      if (title && desc) {
+        title.innerText = "Іздеу тоқтатылды!";
+        desc.innerText = "Сіз бас тарттыңыз. Басты бетке оралуда...";
+        desc.style.color = "#ef4444";
+      }
+      
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1500);
+    });
+  </script>
+
+  <footer>
+    <p> Quiz Battle. 2026 Абай </p>
+  </footer>
+</body>
+
+</html>
