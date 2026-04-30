@@ -129,7 +129,7 @@ function Chat() {
   );
 
   return (
-    <div className="page-container chat-page" style={{ height: '100vh', paddingTop: '100px', paddingBottom: '20px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxSizing: 'border-box' }}>
+    <div className="page-container chat-page" style={{ paddingBottom: '20px', display: 'flex', flexDirection: 'column', boxSizing: 'border-box' }}>
       <div className="chat-container card" style={{ 
         display: 'grid', 
         gridTemplateColumns: '280px 1fr', 

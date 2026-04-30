@@ -330,7 +330,26 @@ select.form-control option {
   }
   
   .chat-page {
-    padding-top: 140px !important;
+    padding-top: 175px !important;
+    height: 100vh;
+  }
+  
+  .chat-container {
+    grid-template-columns: 1fr !important;
+    height: calc(100vh - 200px);
+  }
+  
+  .users-list {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-color);
+    max-height: 200px;
+    padding: 15px !important;
+  }
+  
+  .chat-placeholder {
+    padding: 40px;
+    text-align: center;
+    font-size: 0.9rem !important;
   }
 }
 
