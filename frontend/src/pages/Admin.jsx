@@ -13,6 +13,7 @@ function Admin() {
   const [view, setView] = useState('stats'); 
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [unreadContactCount, setUnreadContactCount] = useState(0);
   
   // Modal states
   const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -42,9 +43,20 @@ function Admin() {
       fetch(`${API_BASE}/contact/read-all`, {
         method: 'PATCH',
         headers: fetchHeaders
-      }).catch(err => console.error('Mark read error:', err));
+      })
+      .then(() => setUnreadContactCount(0))
+      .catch(err => console.error('Mark read error:', err));
     }
+
+    fetchUnread();
   }, [view]);
+
+  const fetchUnread = () => {
+    fetch(`${API_BASE}/contact/unread-count`, { headers: fetchHeaders })
+      .then(res => res.json())
+      .then(data => setUnreadContactCount(data.count || 0))
+      .catch(console.error);
+  };
 
   const fetchData = () => {
     setLoading(true);
@@ -166,15 +178,22 @@ function Admin() {
             { id: 'messages', label: '📩 Хабарламалар' },
             { id: 'logs', label: '📜 Жүйелік логтар' }
           ].map(item => (
-            <button 
-              key={item.id}
-              onClick={() => { setView(item.id); setSearchTerm(''); }}
-              style={{
-                textAlign: 'left', padding: '15px 20px', borderRadius: '12px', border: 'none', background: view === item.id ? 'var(--primary-color)' : 'transparent', color: view === item.id ? 'white' : 'inherit', cursor: 'pointer', transition: '0.3s', fontSize: '1rem', fontWeight: view === item.id ? 'bold' : 'normal'
-              }}
-            >
-              {item.label}
-            </button>
+              <button 
+                key={item.id}
+                onClick={() => { setView(item.id); setSearchTerm(''); }}
+                style={{
+                  textAlign: 'left', padding: '15px 20px', borderRadius: '12px', border: 'none', background: view === item.id ? 'var(--primary-color)' : 'transparent', color: view === item.id ? 'white' : 'inherit', cursor: 'pointer', transition: '0.3s', fontSize: '1rem', fontWeight: view === item.id ? 'bold' : 'normal',
+                  position: 'relative', display: 'flex', alignItems: 'center', gap: '10px'
+                }}
+              >
+                {item.label}
+                {item.id === 'messages' && unreadContactCount > 0 && (
+                  <span style={{ 
+                    width: '8px', height: '8px', background: '#ff3b30', 
+                    borderRadius: '50%', border: '1px solid #fff' 
+                  }}></span>
+                )}
+              </button>
           ))}
         </aside>
 
