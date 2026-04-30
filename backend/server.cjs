@@ -115,6 +115,41 @@ async function initDB() {
         is_read BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+      CREATE TABLE IF NOT EXISTS courses (
+        id SERIAL PRIMARY KEY,
+        title TEXT NOT NULL,
+        description TEXT,
+        category TEXT DEFAULT 'Жалпы',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+      CREATE TABLE IF NOT EXISTS lessons (
+        id SERIAL PRIMARY KEY,
+        course_id INTEGER REFERENCES courses(id) ON DELETE CASCADE,
+        title TEXT NOT NULL,
+        video_url TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+      CREATE TABLE IF NOT EXISTS comments (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        lesson_id INTEGER REFERENCES lessons(id) ON DELETE CASCADE,
+        comment_text TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+      CREATE TABLE IF NOT EXISTS user_progress (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        lesson_id INTEGER REFERENCES lessons(id) ON DELETE CASCADE,
+        completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+      CREATE TABLE IF NOT EXISTS contact_messages (
+        id SERIAL PRIMARY KEY,
+        name TEXT,
+        email TEXT,
+        subject TEXT,
+        message TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
     `);
     client.release();
   } catch (err) { console.error('DB Init Error:', err); }

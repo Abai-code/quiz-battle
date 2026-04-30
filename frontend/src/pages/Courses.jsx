@@ -43,14 +43,19 @@ function Courses() {
 
   const fetchCourses = () => {
     fetch(`${API_BASE}/courses`)
-
       .then(res => res.json())
       .then(data => {
-        setCourses(data);
-        setFilteredCourses(data);
+        const coursesData = Array.isArray(data) ? data : [];
+        setCourses(coursesData);
+        setFilteredCourses(coursesData);
         setLoading(false);
       })
-      .catch(err => setLoading(false));
+      .catch(err => {
+        console.error('Fetch courses error:', err);
+        setCourses([]);
+        setFilteredCourses([]);
+        setLoading(false);
+      });
   };
 
   const fetchProgress = () => {
