@@ -11,6 +11,7 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [unreadDetails, setUnreadDetails] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   
   const navigate = useNavigate();
   const scrollRef = useRef(null);
@@ -123,6 +124,10 @@ function Chat() {
     return detail ? detail.count : 0;
   };
 
+  const filteredUsers = users.filter(u => 
+    u.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="page-container chat-page" style={{ height: '100vh', paddingTop: '100px', paddingBottom: '20px', display: 'flex', flexDirection: 'column', overflow: 'hidden', boxSizing: 'border-box' }}>
       <div className="chat-container card" style={{ 
@@ -144,11 +149,24 @@ function Chat() {
           borderRight: '1px solid var(--border-color)', 
           padding: '20px', 
           overflowY: 'auto',
-          height: '100%'
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column'
         }}>
-          <h3 style={{ marginBottom: '20px', flexShrink: 0 }}>Пайдаланушылар</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {users.map(u => {
+          <h3 style={{ marginBottom: '15px', flexShrink: 0 }}>Пайдаланушылар</h3>
+          <input 
+            type="text" 
+            placeholder="Іздеу..." 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="form-control"
+            style={{ marginBottom: '20px', padding: '10px 15px', fontSize: '0.9rem' }}
+          />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', flex: 1, overflowY: 'auto' }}>
+            {filteredUsers.length === 0 ? (
+              <p style={{ opacity: 0.5, textAlign: 'center', fontSize: '0.9rem', marginTop: '10px' }}>Табылмады</p>
+            ) : (
+              filteredUsers.map(u => {
               const unread = getUnreadCount(u.id);
               return (
                 <div 
@@ -187,7 +205,8 @@ function Chat() {
                   )}
                 </div>
               );
-            })}
+            })
+            )}
           </div>
         </div>
 

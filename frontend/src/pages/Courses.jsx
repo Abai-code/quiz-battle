@@ -33,7 +33,12 @@ function Courses() {
       result = result.filter(c => c.title.toLowerCase().includes(search.toLowerCase()));
     }
     setFilteredCourses(result);
-  }, [search, activeCategory, courses]);
+    
+    if (selectedCourse && !result.find(c => c.id === selectedCourse.id)) {
+      setSelectedCourse(null);
+      setActiveVideo(null);
+    }
+  }, [search, activeCategory, courses, selectedCourse]);
 
   useEffect(() => {
     if (activeVideo) {
