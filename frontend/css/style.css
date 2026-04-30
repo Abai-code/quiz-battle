@@ -104,7 +104,29 @@ body {
 
 @media (max-width: 900px) {
   .user-info { display: none; }
-  .nav-links { overflow-x: auto; justify-content: flex-start; white-space: nowrap; }
+  .nav-links { overflow-x: auto; justify-content: flex-start; white-space: nowrap; padding-bottom: 5px; }
+}
+
+@media (max-width: 768px) {
+  #main-header {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 15px;
+  }
+  .nav-links {
+    order: 3;
+    width: 100%;
+  }
+  .page-container {
+    padding-top: 140px; /* Header is taller due to wrap */
+  }
+  .nav-actions .btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  .logo h1 {
+    font-size: 1.5rem;
+  }
 }
 
 /* Common Components */
@@ -251,3 +273,47 @@ select.form-control option {
   opacity: 1;
   transform: scale(1.1);
 }
+
+/* Course Page Layout */
+.courses-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+.courses-layout.with-sidebar {
+  grid-template-columns: 380px 1fr;
+}
+.video-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+}
+
+/* Chat Page Layout */
+@media (max-width: 1200px) {
+  .chat-container {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .courses-layout.with-sidebar, .video-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .chat-container {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .users-list {
+    border-right: none !important;
+    border-bottom: 1px solid var(--border-color);
+    max-height: 250px;
+  }
+  
+  .chat-page {
+    padding-top: 140px !important;
+  }
+}
+

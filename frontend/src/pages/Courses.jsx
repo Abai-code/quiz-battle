@@ -160,7 +160,7 @@ function Courses() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: selectedCourse ? '380px 1fr' : '1fr', gap: '40px' }}>
+      <div className={`courses-layout ${selectedCourse ? 'with-sidebar' : ''}`}>
         
         {/* Курстар тізімі (Sol jaq) */}
         <div className="grid" style={{ alignContent: 'start' }}>
@@ -201,7 +201,7 @@ function Courses() {
             
             <div className="grid">
               {activeVideo ? (
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '32px' }}>
+                <div className="video-layout">
                   <div>
                     <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '20px', background: '#000', boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
                       <iframe 

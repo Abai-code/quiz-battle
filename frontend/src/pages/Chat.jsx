@@ -134,7 +134,6 @@ function Chat() {
         display: 'grid', 
         gridTemplateColumns: '280px 1fr', 
         flex: 1,
-        width: '1200px',
         maxWidth: '100%',
         margin: '0 auto',
         padding: 0, 
