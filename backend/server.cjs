@@ -148,8 +148,10 @@ async function initDB() {
         email TEXT,
         subject TEXT,
         message TEXT NOT NULL,
+        is_read BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+      ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS is_read BOOLEAN DEFAULT FALSE;
     `);
     client.release();
   } catch (err) { console.error('DB Init Error:', err); }
@@ -697,6 +699,20 @@ app.get('/api/contact', checkRole(['admin']), async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM contact_messages ORDER BY id DESC');
     res.json(result.rows);
+  } catch (err) { res.status(500).json({ error: 'Қате' }); }
+});
+
+app.get('/api/contact/unread-count', checkRole(['admin']), async (req, res) => {
+  try {
+    const result = await pool.query('SELECT COUNT(*) FROM contact_messages WHERE is_read = FALSE');
+    res.json({ count: parseInt(result.rows[0].count) });
+  } catch (err) { res.status(500).json({ error: 'Қате' }); }
+});
+
+app.patch('/api/contact/read-all', checkRole(['admin']), async (req, res) => {
+  try {
+    await pool.query('UPDATE contact_messages SET is_read = TRUE');
+    res.json({ success: true });
   } catch (err) { res.status(500).json({ error: 'Қате' }); }
 });
 

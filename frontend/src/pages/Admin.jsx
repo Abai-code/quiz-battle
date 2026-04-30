@@ -36,6 +36,14 @@ function Admin() {
       return;
     }
     fetchData();
+
+    // Егер хабарламаларды көріп жатса, бәрін оқылды деп белгілеу
+    if (view === 'messages') {
+      fetch(`${API_BASE}/contact/read-all`, {
+        method: 'PATCH',
+        headers: fetchHeaders
+      }).catch(err => console.error('Mark read error:', err));
+    }
   }, [view]);
 
   const fetchData = () => {

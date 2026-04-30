@@ -11,6 +11,7 @@ function Header({ toggleTheme }) {
   const navigate = useNavigate();
 
   const [notifications, setNotifications] = useState([]);
+  const [contactUnreadCount, setContactUnreadCount] = useState(0);
 
   useEffect(() => {
     const handleUserUpdate = () => {
@@ -49,6 +50,16 @@ function Header({ toggleTheme }) {
         .then(res => res.json())
         .then(data => setNotifications(data || []))
         .catch(err => console.error('Notif fetch error:', err));
+
+      // Админге келген хабарламалар (Contact messages)
+      if (user.role === 'admin') {
+        fetch(`${API_BASE}/contact/unread-count`, {
+          headers: { 'x-user-id': user.id, 'x-user-role': user.role }
+        })
+          .then(res => res.json())
+          .then(data => setContactUnreadCount(data.count || 0))
+          .catch(err => console.error('Contact unread fetch error:', err));
+      }
     };
 
     fetchData();
@@ -98,7 +109,16 @@ function Header({ toggleTheme }) {
         )}
 
         {user?.role === 'admin' && (
-          <NavLink to="/admin" style={{ color: 'var(--primary-color)' }}>Админ</NavLink>
+          <NavLink to="/admin" style={{ color: 'var(--primary-color)', position: 'relative' }}>
+            Админ
+            {contactUnreadCount > 0 && (
+              <span style={{ 
+                position: 'absolute', top: '5px', right: '-5px', 
+                width: '8px', height: '8px', background: '#ff3b30', 
+                borderRadius: '50%', border: '1px solid #fff' 
+              }}></span>
+            )}
+          </NavLink>
         )}
       </nav>
 
