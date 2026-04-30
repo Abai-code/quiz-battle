@@ -262,8 +262,32 @@ function Chat() {
               </form>
             </>
           ) : (
-            <div className="chat-placeholder" style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '1.1rem' }}>
-              Чатты бастау үшін пайдаланушыны таңдаңыз
+            <div className="chat-placeholder" style={{ 
+              flex: 1, 
+              display: 'flex', 
+              flexDirection: 'column',
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              color: 'var(--text-muted)', 
+              fontSize: '1.1rem',
+              padding: '40px',
+              textAlign: 'center',
+              gap: '20px'
+            }}>
+              <div style={{ 
+                width: '80px', height: '80px', 
+                borderRadius: '50%', 
+                background: 'rgba(255,255,255,0.03)',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: '2.5rem',
+                border: '1px solid var(--border-color)'
+              }}>
+                💬
+              </div>
+              <div>
+                <h3 style={{ margin: '0 0 10px 0', color: 'var(--text-color)' }}>Хабарламалар</h3>
+                <p style={{ margin: 0, opacity: 0.6, fontSize: '0.95rem' }}>Чатты бастау үшін пайдаланушыны таңдаңыз</p>
+              </div>
             </div>
           )}
         </div>
