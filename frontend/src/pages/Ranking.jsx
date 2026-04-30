@@ -140,13 +140,15 @@ function Ranking() {
                 {leaders.map((leader, index) => (
                   <tr key={leader.id}>
                     <td>{index + 1 + (page * limit)}</td>
-                    <td style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <img 
-                        src={leader.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${leader.name}`} 
-                        alt="avatar" 
-                        style={{ width: '35px', height: '35px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)' }} 
-                      />
-                      <span>{leader.name} {user.id === leader.id && '(Сіз)'}</span>
+                    <td style={{ minWidth: '140px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <img 
+                          src={leader.avatar_url || `https://api.dicebear.com/7.x/initials/svg?seed=${leader.name}`} 
+                          alt="avatar" 
+                          style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', flexShrink: 0 }} 
+                        />
+                        <span style={{ fontSize: '0.9rem', lineHeight: '1.2' }}>{leader.name} {user.id === leader.id && '(Сіз)'}</span>
+                      </div>
                     </td>
                     <td style={{ textAlign: 'right', fontWeight: 'bold' }}>{leader.points}</td>
                     <td style={{ textAlign: 'center' }}>
