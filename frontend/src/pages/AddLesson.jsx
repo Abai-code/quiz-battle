@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE from '../api';
 
 function AddLesson() {
   const navigate = useNavigate();
@@ -8,6 +9,8 @@ function AddLesson() {
   const [lessons, setLessons] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   useEffect(() => {
     fetchCourses();
@@ -22,14 +25,14 @@ function AddLesson() {
   }, [lesson.courseId]);
 
   const fetchCourses = () => {
-    fetch('http://localhost:5000/api/courses')
+    fetch(`${API_BASE}/courses`)
       .then(res => res.json())
       .then(data => setCourses(data))
       .catch(err => console.error(err));
   };
 
   const fetchLessons = (courseId) => {
-    fetch(`http://localhost:5000/api/courses/${courseId}/lessons`)
+    fetch(`${API_BASE}/lessons/${courseId}`)
       .then(res => res.json())
       .then(data => setLessons(data))
       .catch(err => console.error(err));
@@ -40,14 +43,19 @@ function AddLesson() {
     setLoading(true);
 
     const url = editingId 
-      ? `http://localhost:5000/api/lessons/${editingId}`
-      : 'http://localhost:5000/api/lessons';
+      ? `${API_BASE}/lessons/${editingId}`
+      : `${API_BASE}/lessons`;
     
     const method = editingId ? 'PUT' : 'POST';
 
     fetch(url, {
       method: method,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'x-user-id': user.id,
+        'x-user-name': user.name,
+        'x-user-role': user.role
+      },
       body: JSON.stringify({
         title: lesson.title,
         video_url: lesson.videoUrl,
@@ -72,7 +80,14 @@ function AddLesson() {
   const handleDelete = async (id) => {
     const confirmed = await window.confirm('Бұл сабақты өшіруға сенімдісіз бе?');
     if (confirmed) {
-      fetch(`http://localhost:5000/api/lessons/${id}`, { method: 'DELETE' })
+      fetch(`${API_BASE}/lessons/${id}`, { 
+        method: 'DELETE',
+        headers: {
+          'x-user-id': user.id,
+          'x-user-name': user.name,
+          'x-user-role': user.role
+        }
+      })
         .then(async res => {
           if (!res.ok) {
             const errorData = await res.json();

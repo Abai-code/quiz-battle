@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE from '../api';
 
 function AddQuestion() {
   const [question, setQuestion] = useState({
@@ -30,7 +31,7 @@ function AddQuestion() {
   const [editingId, setEditingId] = useState(null); // Өңделіп жатқан сұрақтың ID-і
 
   const fetchQuestions = () => {
-    fetch('http://localhost:5000/api/questions')
+    fetch(`${API_BASE}/questions`)
       .then(res => res.json())
       .then(data => setQuestions(data))
       .catch(err => console.error(err));
@@ -41,8 +42,8 @@ function AddQuestion() {
     setLoading(true);
 
     const url = editingId 
-      ? `http://localhost:5000/api/questions/${editingId}` 
-      : 'http://localhost:5000/api/questions';
+      ? `${API_BASE}/questions/${editingId}` 
+      : `${API_BASE}/questions`;
     
     const method = editingId ? 'PUT' : 'POST';
 
@@ -94,7 +95,7 @@ function AddQuestion() {
   const handleDelete = async (id) => {
     const confirmed = await window.confirm('Бұл сұрақты өшіруге сенімдісіз бе?');
     if (confirmed) {
-      fetch(`http://localhost:5000/api/questions/${id}`, { 
+      fetch(`${API_BASE}/questions/${id}`, { 
         method: 'DELETE',
         headers: fetchHeaders
       })

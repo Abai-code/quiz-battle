@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import API_BASE from '../api';
 
 function AddCourse() {
   const [course, setCourse] = useState({ title: '', description: '', category: 'IT' });
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   const categories = ['IT', 'Спорт', 'Тарих', 'Тілдер', 'Өнер', 'Ғылым'];
 
@@ -13,7 +15,7 @@ function AddCourse() {
   }, []);
 
   const fetchCourses = () => {
-    fetch('http://localhost:5000/api/courses')
+    fetch(`${API_BASE}/courses`)
       .then(res => res.json())
       .then(data => setCourses(data))
       .catch(err => console.error(err));
@@ -24,14 +26,19 @@ function AddCourse() {
     setLoading(true);
 
     const url = editingId 
-      ? `http://localhost:5000/api/courses/${editingId}`
-      : 'http://localhost:5000/api/courses';
+      ? `${API_BASE}/courses/${editingId}`
+      : `${API_BASE}/courses`;
     
     const method = editingId ? 'PUT' : 'POST';
 
     fetch(url, {
       method: method,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'x-user-id': user.id,
+        'x-user-name': user.name,
+        'x-user-role': user.role
+      },
       body: JSON.stringify(course)
     })
     .then(async res => {
@@ -58,7 +65,14 @@ function AddCourse() {
   const handleDelete = async (id) => {
     const confirmed = await window.confirm('Бұл курсты өшіруге сенімдісіз бе? Барлық сабақтар да жойылады.');
     if (confirmed) {
-      fetch(`http://localhost:5000/api/courses/${id}`, { method: 'DELETE' })
+      fetch(`${API_BASE}/courses/${id}`, { 
+        method: 'DELETE',
+        headers: {
+          'x-user-id': user.id,
+          'x-user-name': user.name,
+          'x-user-role': user.role
+        }
+      })
         .then(res => {
           if (!res.ok) throw new Error('Өшіру мүмкін болмады');
           return res.json();
