@@ -109,25 +109,42 @@ body {
 
 @media (max-width: 768px) {
   #main-header {
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px 15px;
+    flex-direction: column;
+    padding: 15px;
+    gap: 12px;
+    height: auto;
+    position: fixed;
   }
-  .nav-links {
-    order: 3;
-    width: 100%;
-  }
-  .page-container {
-    padding-top: 140px; /* Header is taller due to wrap */
-  }
-  .nav-actions .btn {
-    padding: 6px 12px;
-    font-size: 0.8rem;
+  .logo {
+    margin-bottom: 0;
   }
   .logo h1 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
+    white-space: nowrap;
+  }
+  .nav-links {
+    width: 100%;
+    order: 3;
+    padding: 8px 0;
+    border-top: 1px solid var(--border-color);
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-links a {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+  }
+  .nav-actions {
+    width: 100%;
+    justify-content: space-between;
+    order: 2;
+  }
+  .page-container {
+    padding-top: 170px !important; /* Adjust for taller header */
   }
 }
+
 
 /* Common Components */
 .card {
