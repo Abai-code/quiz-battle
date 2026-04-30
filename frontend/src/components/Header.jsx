@@ -87,6 +87,7 @@ function Header({ toggleTheme }) {
             <span className="badge-count">{unreadCounts.total}</span>
           )}
         </NavLink>
+        <NavLink to="/contact">Байланыс</NavLink>
         
         {(user?.role === 'teacher' || user?.role === 'admin') && (
           <div className="admin-group" style={{ display: 'flex', gap: '10px', marginLeft: '10px', paddingLeft: '10px', borderLeft: '1px solid var(--border-color)' }}>
