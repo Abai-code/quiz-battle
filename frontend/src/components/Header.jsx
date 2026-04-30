@@ -17,11 +17,16 @@ function Header({ toggleTheme }) {
     const handleUserUpdate = () => {
       setUser(JSON.parse(localStorage.getItem('user')));
     };
+    const handleContactRead = () => {
+      setContactUnreadCount(0);
+    };
     window.addEventListener('userUpdated', handleUserUpdate);
     window.addEventListener('storage', handleUserUpdate);
+    window.addEventListener('contactRead', handleContactRead);
     return () => {
       window.removeEventListener('userUpdated', handleUserUpdate);
       window.removeEventListener('storage', handleUserUpdate);
+      window.removeEventListener('contactRead', handleContactRead);
     };
   }, []);
 

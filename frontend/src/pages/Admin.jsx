@@ -44,7 +44,10 @@ function Admin() {
         method: 'PATCH',
         headers: fetchHeaders
       })
-      .then(() => setUnreadContactCount(0))
+      .then(() => {
+        setUnreadContactCount(0);
+        window.dispatchEvent(new Event('contactRead'));
+      })
       .catch(err => console.error('Mark read error:', err));
     }
 
