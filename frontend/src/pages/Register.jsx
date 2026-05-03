@@ -64,8 +64,10 @@ function Register() {
       if (res.ok) {
         localStorage.setItem('user', JSON.stringify(data.user));
         localStorage.setItem('token', data.token);
-        alert('Сәтті тіркелдіңіз!');
-        window.location.href = '/';
+        setApiError('🎉 Сәтті тіркелдіңіз! Басты бетке өтуде...');
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
       } else {
         setApiError(data.error || 'Қате кетті');
       }
@@ -87,7 +89,15 @@ function Register() {
         <h2 className="section-title" style={{ fontSize: '1.8rem', marginBottom: '30px' }}>Тіркелу</h2>
         
         {apiError && (
-          <div style={{ background: 'rgba(231, 76, 60, 0.1)', color: '#e74c3c', padding: '12px', borderRadius: '10px', marginBottom: '20px', textAlign: 'center', border: '1px solid #e74c3c' }}>
+          <div style={{ 
+            background: apiError.includes('Сәтті') ? 'rgba(46, 204, 113, 0.1)' : 'rgba(231, 76, 60, 0.1)', 
+            color: apiError.includes('Сәтті') ? '#2ecc71' : '#e74c3c', 
+            padding: '12px', 
+            borderRadius: '10px', 
+            marginBottom: '20px', 
+            textAlign: 'center', 
+            border: `1px solid ${apiError.includes('Сәтті') ? '#2ecc71' : '#e74c3c'}` 
+          }}>
             {apiError}
           </div>
         )}

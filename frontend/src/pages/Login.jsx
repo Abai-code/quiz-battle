@@ -39,8 +39,10 @@ function Login() {
         if (data.token) {
           localStorage.setItem('token', data.token);
         }
-        alert(`${data.name || 'Сәтті'} ретінде сәтті кірдіңіз!`);
-        window.location.href = '/';
+        setMessage(`Қош келдіңіз, ${data.name || 'Пайдаланушы'}! Басты бетке өтуде...`);
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1500);
       } else {
         setMessage(data.error || 'Қате кетті');
       }
@@ -54,7 +56,16 @@ function Login() {
     <main className="page-container">
       <div className="form-container card">
         <h2 className="section-title" style={{ fontSize: '1.8rem', marginBottom: '20px' }}>Жүйеге кіру</h2>
-        {message && <p style={{ color: '#e74c3c', textAlign: 'center', marginBottom: '15px', fontWeight: 'bold' }}>{message}</p>}
+        {message && (
+          <p style={{ 
+            color: message.includes('Қош келдіңіз') ? '#2ecc71' : '#e74c3c', 
+            textAlign: 'center', 
+            marginBottom: '15px', 
+            fontWeight: 'bold' 
+          }}>
+            {message}
+          </p>
+        )}
         <form onSubmit={handleLogin}>
           <div className="form-group">
             <label>Электрондық пошта (Email)</label>
