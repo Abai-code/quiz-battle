@@ -49,11 +49,11 @@ body {
   background: var(--card-bg);
   backdrop-filter: var(--glass-blur);
   border-bottom: 1px solid var(--border-color);
-  padding: 10px 40px;
+  padding: calc(10px + env(safe-area-inset-top, 0px)) 40px 10px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 1000;
+  z-index: 10000;
   gap: 20px;
 }
 
@@ -155,7 +155,7 @@ body {
     order: 2;
   }
   .page-container {
-    padding-top: 190px !important; /* Adjust for taller header */
+    padding-top: 210px !important; /* Adjust for taller header with safe area */
   }
 }
 
