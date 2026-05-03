@@ -263,7 +263,7 @@ function Admin() {
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '30px', marginBottom: '50px' }}>
                 <div className="card" style={{ padding: '20px' }}>
                   <h3 style={{ marginBottom: '20px', fontSize: '1.2rem' }}>📈 Тіркелу статистикасы (соңғы 7 күн)</h3>
-                  {chartData ? (
+                  {chartData?.registrations ? (
                     <Line 
                       data={{
                         labels: chartData.registrations.map(r => r.date),
@@ -278,12 +278,12 @@ function Admin() {
                       }}
                       options={{ responsive: true, plugins: { legend: { display: false } } }}
                     />
-                  ) : <p>Жүктелуде...</p>}
+                  ) : <p>Статистика жүктелуде...</p>}
                 </div>
 
                 <div className="card" style={{ padding: '20px' }}>
                   <h3 style={{ marginBottom: '20px', fontSize: '1.2rem' }}>📚 Танымал курстар (Прогресс бойынша)</h3>
-                  {chartData ? (
+                  {chartData?.popularCourses ? (
                     <Bar 
                       data={{
                         labels: chartData.popularCourses.map(c => c.title),
@@ -296,7 +296,7 @@ function Admin() {
                       }}
                       options={{ responsive: true, plugins: { legend: { display: false } } }}
                     />
-                  ) : <p>Жүктелуде...</p>}
+                  ) : <p>Курс статистикасы жүктелуде...</p>}
                 </div>
               </div>
               

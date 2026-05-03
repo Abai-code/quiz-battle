@@ -797,12 +797,13 @@ io.on('connection', (socket) => {
 app.get('/api/admin/charts-data', checkRole(['admin']), async (req, res) => {
   try {
     // 1. Тіркелу статистикасы (соңғы 7 күн)
+    // SQL-ді жеңілдеттік: тек бар даталарды аламыз
     const registrations = await pool.query(`
       SELECT TO_CHAR(created_at, 'DD.MM') as date, COUNT(*) as count 
-      FROM (SELECT CURRENT_TIMESTAMP - interval '1 day' * s.a as date FROM generate_series(0,6) as s(a)) days
-      LEFT JOIN users ON TO_CHAR(created_at, 'DD.MM') = TO_CHAR(days.date, 'DD.MM')
-      GROUP BY TO_CHAR(days.date, 'DD.MM')
-      ORDER BY MIN(days.date) ASC
+      FROM users 
+      WHERE created_at > CURRENT_DATE - INTERVAL '7 days'
+      GROUP BY TO_CHAR(created_at, 'DD.MM')
+      ORDER BY MIN(created_at) ASC
     `);
 
     // 2. Ең танымал курстар
@@ -817,12 +818,12 @@ app.get('/api/admin/charts-data', checkRole(['admin']), async (req, res) => {
     `);
 
     res.json({
-      registrations: registrations.rows,
-      popularCourses: popularCourses.rows
+      registrations: registrations.rows || [],
+      popularCourses: popularCourses.rows || []
     });
   } catch (err) { 
     console.error('Stats Error:', err);
-    res.status(500).json({ error: 'Қате' }); 
+    res.status(500).json({ error: 'Stats Error', details: err.message }); 
   }
 });
 
