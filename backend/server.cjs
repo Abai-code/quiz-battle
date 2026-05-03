@@ -6,6 +6,11 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http, {
+  cors: { origin: "*", methods: ["GET", "POST"] }
+});
+
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -756,5 +761,70 @@ app.post('/api/toggle-progress', async (req, res) => {
   } catch (err) { res.status(500).json({ error: 'Қате' }); }
 });
 
+// Socket.io logic
+const userSockets = new Map(); // userId -> socketId
+
+io.on('connection', (socket) => {
+  console.log('User connected:', socket.id);
+
+  socket.on('join', (userId) => {
+    if (userId) {
+      userSockets.set(userId.toString(), socket.id);
+      console.log(`User ${userId} joined with socket ${socket.id}`);
+    }
+  });
+
+  socket.on('send_message', async (data) => {
+    // Backend handles saving via REST or here, but let's just emit for now
+    // to keep it simple with existing REST flow.
+    const receiverSocketId = userSockets.get(data.receiver_id.toString());
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit('receive_message', data);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    for (const [userId, socketId] of userSockets.entries()) {
+      if (socketId === socket.id) {
+        userSockets.delete(userId);
+        break;
+      }
+    }
+  });
+});
+
+// Admin Stats for Charts
+app.get('/api/admin/charts-data', checkRole(['admin']), async (req, res) => {
+  try {
+    // 1. Тіркелу статистикасы (соңғы 7 күн)
+    const registrations = await pool.query(`
+      SELECT TO_CHAR(created_at, 'DD.MM') as date, COUNT(*) as count 
+      FROM (SELECT CURRENT_TIMESTAMP - interval '1 day' * s.a as date FROM generate_series(0,6) as s(a)) days
+      LEFT JOIN users ON TO_CHAR(created_at, 'DD.MM') = TO_CHAR(days.date, 'DD.MM')
+      GROUP BY TO_CHAR(days.date, 'DD.MM')
+      ORDER BY MIN(days.date) ASC
+    `);
+
+    // 2. Ең танымал курстар
+    const popularCourses = await pool.query(`
+      SELECT c.title, COUNT(up.id) as count
+      FROM courses c
+      LEFT JOIN lessons l ON c.id = l.course_id
+      LEFT JOIN user_progress up ON l.id = up.lesson_id
+      GROUP BY c.id, c.title
+      ORDER BY count DESC
+      LIMIT 5
+    `);
+
+    res.json({
+      registrations: registrations.rows,
+      popularCourses: popularCourses.rows
+    });
+  } catch (err) { 
+    console.error('Stats Error:', err);
+    res.status(500).json({ error: 'Қате' }); 
+  }
+});
+
 const PORT = 5001;
-app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+http.listen(PORT, () => console.log(`Server started on port ${PORT}`));

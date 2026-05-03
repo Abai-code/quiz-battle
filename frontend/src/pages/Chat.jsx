@@ -2,19 +2,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import API_BASE from '../api';
+import { io } from 'socket.io-client';
 
 
 function Chat() {
-  const [user] = useState(() => JSON.parse(localStorage.getItem('user')));
   const [users, setUsers] = useState([]);
   const [activeChat, setActiveChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [unreadDetails, setUnreadDetails] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [unreadCounts, setUnreadCounts] = useState([]);
   
-  const navigate = useNavigate();
   const scrollRef = useRef(null);
+  const socketRef = useRef();
+  const navigate = useNavigate();
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
   const scrollToBottom = () => {
     if (scrollRef.current) {
@@ -27,7 +30,39 @@ function Chat() {
   }, [messages]);
 
   useEffect(() => {
-    if (!user) {
+    if (!user.id) return;
+
+    // Socket.io қосылу (API_BASE-тен негізгі URL-ді алу)
+    const socketUrl = API_BASE.replace('/api', '');
+    socketRef.current = io(socketUrl);
+
+    socketRef.current.emit('join', user.id);
+
+    socketRef.current.on('receive_message', (data) => {
+      // Егер хабарлама ашық тұрған чаттан келсе, оны бірден қосу
+      if (data.sender_id === activeChat) {
+        setMessages(prev => [...prev, data]);
+      }
+      // Барлық жағдайда оқылмаған хабарламаларды жаңарту
+      fetchUnread();
+    });
+
+    return () => {
+      if (socketRef.current) socketRef.current.disconnect();
+    };
+  }, [user.id, activeChat]);
+
+  const fetchUnread = () => {
+    fetch(`${API_BASE}/unread-messages`, {
+      headers: { 'x-user-id': user.id }
+    })
+    .then(res => res.json())
+    .then(data => setUnreadDetails(data.details || []))
+    .catch(console.error);
+  };
+
+  useEffect(() => {
+    if (!user.id) {
       navigate('/login');
       return;
     }
@@ -38,42 +73,8 @@ function Chat() {
       .then(data => setUsers(data.filter(u => u.id !== user.id)))
       .catch(console.error);
 
-    // Оқылмағандарды алу (әр 5 сек)
-    const fetchUnread = () => {
-      fetch(`${API_BASE}/unread-messages`, {
-        headers: { 'x-user-id': user.id }
-      })
-      .then(res => res.json())
-      .then(data => setUnreadDetails(data.details || []))
-      .catch(console.error);
-    };
     fetchUnread();
-    const interval = setInterval(fetchUnread, 5000);
-    return () => clearInterval(interval);
   }, [user?.id, navigate]);
-
-  // Жаңа хабарламаларды бақылау
-  useEffect(() => {
-    if (activeChat && user) {
-      const interval = setInterval(() => {
-        fetch(`${API_BASE}/messages/${activeChat}`, {
-          headers: { 'x-user-id': user.id }
-        })
-        .then(res => res.json())
-        .then(data => {
-          setMessages(prev => {
-            if (data.length > prev.length) {
-              markAsRead(activeChat);
-              return data;
-            }
-            return prev;
-          });
-        })
-        .catch(console.error);
-      }, 3000);
-      return () => clearInterval(interval);
-    }
-  }, [activeChat, user?.id]);
 
   const loadChat = (otherId) => {
     setActiveChat(otherId);
@@ -113,8 +114,14 @@ function Chat() {
     })
     .then(res => res.json())
     .then(data => {
-      setMessages(prev => [...prev, { ...data, sender_id: user.id }]);
+      const msg = { ...data, sender_id: user.id };
+      setMessages(prev => [...prev, msg]);
       setNewMessage('');
+      
+      // Socket арқылы жіберу
+      if (socketRef.current) {
+        socketRef.current.emit('send_message', msg);
+      }
     })
     .catch(console.error);
   };

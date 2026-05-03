@@ -21,6 +21,8 @@ import Admin from './pages/Admin';
 import Notifications from './pages/Notifications';
 import Chat from './pages/Chat';
 import NotFound from './pages/NotFound';
+import MobileSplash from './components/MobileSplash';
+
 
 // Protected Route component
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -62,6 +64,7 @@ function App() {
 
   return (
     <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <MobileSplash />
       <div className="app-container">
         <Header toggleTheme={toggleTheme} />
         <main>

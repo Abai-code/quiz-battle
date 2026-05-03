@@ -2,6 +2,31 @@ import React, { useState, useEffect } from 'react';
 import API_BASE from '../api';
 
 import { useNavigate } from 'react-router-dom';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js';
+import { Line, Bar } from 'react-chartjs-2';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 function Admin() {
   const [users, setUsers] = useState([]);
@@ -14,6 +39,7 @@ function Admin() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [unreadContactCount, setUnreadContactCount] = useState(0);
+  const [chartData, setChartData] = useState(null);
   
   // Modal states
   const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -80,7 +106,14 @@ function Admin() {
         else if (view === 'questions') setQuestions(data);
         else if (view === 'messages') setMessages(data);
         else if (view === 'courses') setCourses(data);
-        else if (view === 'stats') setStats(data);
+        else if (view === 'stats') {
+          setStats(data);
+          // Графиктер үшін бөлек деректерді алу
+          fetch(`${API_BASE}/admin/charts-data`, { headers: fetchHeaders })
+            .then(r => r.json())
+            .then(charts => setChartData(charts))
+            .catch(console.error);
+        }
         else if (view === 'logs') setLogs(data);
         setLoading(false);
       })
@@ -223,6 +256,47 @@ function Admin() {
                 <div className="card" style={{ textAlign: 'center', background: 'rgba(255,255,255,0.03)' }}>
                   <h4 style={{ opacity: 0.6 }}>Аяқталған ойындар</h4>
                   <p style={{ fontSize: '2.5rem', fontWeight: 'bold' }}>{stats?.summary?.games || 0}</p>
+                </div>
+              </div>
+
+              {/* Графиктер */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '30px', marginBottom: '50px' }}>
+                <div className="card" style={{ padding: '20px' }}>
+                  <h3 style={{ marginBottom: '20px', fontSize: '1.2rem' }}>📈 Тіркелу статистикасы (соңғы 7 күн)</h3>
+                  {chartData ? (
+                    <Line 
+                      data={{
+                        labels: chartData.registrations.map(r => r.date),
+                        datasets: [{
+                          label: 'Жаңа пайдаланушылар',
+                          data: chartData.registrations.map(r => r.count),
+                          borderColor: '#f39c12',
+                          backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                          fill: true,
+                          tension: 0.4
+                        }]
+                      }}
+                      options={{ responsive: true, plugins: { legend: { display: false } } }}
+                    />
+                  ) : <p>Жүктелуде...</p>}
+                </div>
+
+                <div className="card" style={{ padding: '20px' }}>
+                  <h3 style={{ marginBottom: '20px', fontSize: '1.2rem' }}>📚 Танымал курстар (Прогресс бойынша)</h3>
+                  {chartData ? (
+                    <Bar 
+                      data={{
+                        labels: chartData.popularCourses.map(c => c.title),
+                        datasets: [{
+                          label: 'Аяқталу саны',
+                          data: chartData.popularCourses.map(c => c.count),
+                          backgroundColor: '#3498db',
+                          borderRadius: 8
+                        }]
+                      }}
+                      options={{ responsive: true, plugins: { legend: { display: false } } }}
+                    />
+                  ) : <p>Жүктелуде...</p>}
                 </div>
               </div>
               
