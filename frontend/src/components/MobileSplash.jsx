@@ -42,7 +42,7 @@ const MobileSplash = () => {
         <div className="splash-loader">
           <div className="splash-loader-bar"></div>
         </div>
-        <div className="splash-text">Жүктелуде...</div>
+        <div className="splash-text">Қош келдіңіз!</div>
       </div>
     </div>
   );
