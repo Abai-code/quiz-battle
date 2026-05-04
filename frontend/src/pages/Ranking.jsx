@@ -11,6 +11,7 @@ function Ranking() {
   const [completedBattles, setCompletedBattles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState({ show: false, opponent: null });
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -84,6 +85,10 @@ function Ranking() {
     navigate('/quiz');
   };
 
+  const filteredLeaders = leaders.filter(leader => 
+    leader.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <main className="page-container">
       <h2 className="section-title">Battle & Рейтинг</h2>
@@ -130,6 +135,16 @@ function Ranking() {
       )}
 
       <div className="card">
+        <div style={{ marginBottom: '20px' }}>
+          <input 
+            type="text" 
+            placeholder="Ойыншыны іздеу..." 
+            className="form-control" 
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ width: '100%', padding: '10px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.1)', background: 'transparent', color: 'white' }}
+          />
+        </div>
         {loading ? <p>Жүктелуде...</p> : (
           <>
             <table className="leaderboard">
@@ -137,7 +152,7 @@ function Ranking() {
                 <tr><th>№</th><th>Ойыншы</th><th style={{ textAlign: 'right' }}>Ұпай</th><th style={{ textAlign: 'center' }}>Battle</th></tr>
               </thead>
               <tbody>
-                {leaders.map((leader, index) => (
+                {filteredLeaders.map((leader, index) => (
                   <tr key={leader.id}>
                     <td>{index + 1 + (page * limit)}</td>
                     <td style={{ minWidth: '140px' }}>
